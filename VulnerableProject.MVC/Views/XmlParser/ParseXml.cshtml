@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "XML Parser";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="ParseXml" method="post">
+    <div class="form-group">
+        <label for="xmlInput">XML Input:</label>
+        <textarea id="xmlInput" name="xml" class="form-control" rows="10" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Parse XML</button>
+</form>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Error
+    </div>
+}
+
+@if (ViewBag.Result != null)
+{
+    <h3>Parsed XML Content:</h3>
+    <pre>@ViewBag.Result</pre>
+}

@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "SendPatientData";
+
+    var patient = ViewBag.Patient as Sast.DIERS.Test.MVC.Models.Patient;
+}
+
+
+<div class="text-center">
+
+    <h1>Patient Data Received</h1>
+    <p>Name: @ViewBag.PatientName</p>
+    <p>Age: @ViewBag.PatientAge</p>
+    <p>Gender: @ViewBag.PatientGender</p>
+    <p>Condition: @ViewBag.MedicalCondition</p>
+
+    <h3>To send patient data click:</h3>
+    <a href="/Home/SendPatientData?name=@ViewBag.PatientName&age=@ViewBag.PatientAge&@ViewBag.PatientGender=Non-Binary&condition=@ViewBag.MedicalCondition">Send Unsafe Patient Data</a>
+
+</div>

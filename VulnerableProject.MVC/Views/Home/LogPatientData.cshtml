@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "LogPatientData";
+
+    var patient = ViewBag.Patient as Sast.DIERS.Test.MVC.Models.Patient;
+}
+
+ <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            // Extracting patient data from ViewBag
+            var patientData = {
+                name: '@patient.Name',
+                age: '@patient.Age',
+                gender: '@patient.Gender',
+                medicalCondition: '@patient.MedicalCondition'
+            };
+
+            // Logging patient data to browser console
+            console.log("Logging Patient Data:", patientData);
+        });
+    </script>
+
+<div class="text-center">
+
+    <h1>Patient Data Logged</h1>
+    <p>Check the server logs and browser console to see the logged patient data.</p>
+
+</div>

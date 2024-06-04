@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "NoSQL Query";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="PerformQuery" method="post">
+    <div class="form-group">
+        <label for="userStrInput">NoSQL Query:</label>
+        <input type="text" id="userStrInput" name="userStr" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Perform Query</button>
+</form>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Error
+    </div>
+}
+
+@if (ViewBag.Result != null)
+{
+    <h3>Query Result:</h3>
+    <pre>@ViewBag.Result</pre>
+}

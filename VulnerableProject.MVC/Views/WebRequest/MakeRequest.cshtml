@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Web Request";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="MakeRequest" method="post">
+    <div class="form-group">
+        <label for="uriInput">URI Input:</label>
+        <input type="text" id="uriInput" name="uri" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Make Request</button>
+</form>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Error
+    </div>
+}
+
+@if (ViewBag.Result != null)
+{
+    <h3>Request Result:</h3>
+    <pre>@ViewBag.Result</pre>
+}

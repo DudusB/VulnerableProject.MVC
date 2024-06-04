@@ -1,0 +1,7 @@
+﻿@{
+    ViewData["Title"] = "Secure Area";
+    var user = Context.Session.GetString("User"); // Access session using Context in Razor views
+}
+
+<h1>Secure Area</h1>
+<p>Welcome to the secure area, @user!</p>

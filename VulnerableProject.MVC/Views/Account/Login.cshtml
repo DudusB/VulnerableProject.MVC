@@ -1,0 +1,21 @@
+﻿@model Sast.DIERS.Test.MVC.Models.LoginViewModel
+
+@{
+    ViewBag.Title = "Log in";
+}
+
+<h2>Log in</h2>
+
+<form method="post" action="/Account/Login">
+    <div>
+        <label for="Username">Username</label>
+        <input type="text" name="Username" id="Username" />
+    </div>
+    <div>
+        <label for="Password">Password</label>
+        <input type="password" name="Password" id="Password" />
+    </div>
+    <div>
+        <button type="submit">Log in</button>
+    </div>
+</form>

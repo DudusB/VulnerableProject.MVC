@@ -1,0 +1,84 @@
+# ASP.NET Core (.NET Framework)
+# Build and test ASP.NET Core projects targeting the full .NET Framework.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+name: Pipeline 1
+trigger:
+ branches:
+   include:
+    -
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  solution: 'VulnerableProject.MVC.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
+  dotNetVersion: '8.x'
+  nugetVersion: '6.9.1'
+  CACHE_RESTORED: 'false'
+  generateSBOM: 'true'
+  repoCloneDir: '/home/vsts/work/1/s'
+  xUnitTestArgs: ''
+
+
+resources: 
+ - repo: self
+
+stages:
+ - stage: BuildAndTest
+   jobs:
+    - job: Restore
+      steps:
+
+#Use specified version of .net core
+      - task: UseDotNet@2
+        displayName: 'Install .NET $(dotNetVersion)'
+        inputs:
+          packageType: 'sdk'
+          version: '$(dotNetVersion)'
+          installationPath: $(Agent.ToolsDirectory)/dotnet
+
+#Install specified verion of nuget
+      - task: NuGetToolInstaller@1
+        inputs:
+          versionSpec: $(nugetVersion)
+        displayName: 'Install NuGet version $(nugetVersion)'
+#Restore nuget packages from cache if found match version
+      - task: Cache@2
+        inputs:
+          key: 'nuget | "$(Agent.OS)" | **/packages.lock.json,!**/bin/**,!**/obj/**'
+          restoreKeys: |
+            nuget | "$(Agent.OS)"
+          path: $(NUGET_PACKAGES)
+          cacheHitVar: CACHE_RESTORED
+        displayName: Cache NuGet packages
+
+#Restore nuget packgaes from private feed if no cache found or locked versions changed
+      - task: DotNetCoreCLI@2
+        displayName: 'Restore packages from private feed'
+        inputs:
+          command: 'restore'
+          projects: '**/*.sln'
+          feedsToUse: 'select'
+          vstsFeed: 'bffd32af-b286-4b4a-849a-0fc8e1e02e10/040ec6fe-3078-4851-9192-b9861514beec'
+        condition: ne(variables.CACHE_RESTORED, 'true')
+
+#Build application and store it in aritfacts directory 
+      - task: DotNetCoreCLI@2
+        displayName: Build application
+        inputs:
+          command: 'build'
+          projects: '$(solution)'
+          arguments: '--output $(Build.ArtifactStagingDirectory) --configuration $(buildConfiguration)'
+
+
+#SAST 
+#SCA debricked
+      - script: |
+          curl -L https://github.com/debricked/cli/releases/download/release-v1/cli_linux_x86_64.tar.gz | tar -xz debricked
+          ./debricked scan
+        displayName: Debricked scan
+        env:
+          DEBRICKED_TOKEN: $(DEBRICKED_TOKEN)
